@@ -35,7 +35,7 @@ struct ContentView: View {
                     }
                 }
             }
-           
+            .background(getBackgroundView(for: weatherVM.getWeatherCondition()))
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
@@ -72,11 +72,23 @@ struct ContentView: View {
             }
         }
     }
+    
+    @ViewBuilder
+      private func getBackgroundView(for weatherCondition: String) -> some View {
+          switch weatherCondition {
+          case "Clouds":
+              CloudyView()
+          case "Rain":
+              RainyView()
+          case "Snow":
+              SnowyView()
+          case "Sunny":
+              SunnyView()
+          default:
+              SunnyView()
+          }
+      }
 }
 
 
 
-
-#Preview {
-    ContentView()
-}

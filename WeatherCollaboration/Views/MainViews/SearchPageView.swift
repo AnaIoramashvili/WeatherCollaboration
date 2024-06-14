@@ -24,14 +24,15 @@ struct SearchPageView: View {
             VStack {
                 ZStack(alignment: .trailing) {
                     TextField("Search for a city", text: $searchText)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.leading, 24)
+                        .padding(.vertical, 10)
+                        .background(Color.white)
+                        .cornerRadius(20)
+                        .shadow(radius: 3)
                         .padding(.horizontal)
                         .onChange(of: searchText) { newValue in
                             debounceSearch()
                         }
-
-
-
                     if isCancelButtonVisible {
                         Button(action: {
                             clearSearch()
@@ -39,58 +40,36 @@ struct SearchPageView: View {
                             Text("Cancel")
                                 .foregroundColor(.blue)
                         }
-                        .padding(.trailing, 10)
+                        .padding(.trailing, 30)
                     }
                 }
                 .padding(.horizontal)
+                
+                Spacer()
+                    .frame(height: 450)
 
-                if searchText.isEmpty && !pastSearches.isEmpty {
-                    List {
-                        ForEach(pastSearches, id: \.self) { city in
+                    VStack(spacing: 10) {
+                        ForEach(searchText.isEmpty ? pastSearches : searchResults.map { $0.name }, id: \.self) { city in
                             Button(action: {
-                                searchText = city
-                                searchResults = []
-                                viewModel.fetchCityDetails(for: city)
-                                addCityToStore(cityName: city)
-                                isPresented = false
+                                handleCitySelection(city)
                             }) {
                                 Text(city)
-                                    .foregroundColor(.black)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
+                                    .cornerRadius(10)
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 5)
-                            .background(Color.green.opacity(0.3))
-                            .cornerRadius(8)
                         }
                     }
-                    .listStyle(PlainListStyle())
-                    .padding(.bottom, 10)
+                    .padding(.horizontal, 50)
                 }
-
-                List(searchResults, id: \.id) { city in
-                    Button(action: {
-                        addCityToStore(city: city)
-                        viewModel.fetchCityDetails(for: city.name)
-                        isPresented = false
-                        presentationMode.wrappedValue.dismiss()
-                    }) {
-                        Text(city.name)
-                            .font(.headline)
-                            .foregroundColor(.black)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 5)
-                    .background(Color.green.opacity(0.3))
-                    .cornerRadius(8)
-                }
-                .listStyle(PlainListStyle())
-            }
-            .navigationTitle("Search City")
+            .navigationTitle("Locations")
             .alert(isPresented: $showErrorAlert) {
                 Alert(title: Text("Error"), message: Text("Failed to fetch cities"), dismissButton: .default(Text("OK")))
             }
             .onAppear {
-                initializePastSearches()
                 loadPastSearches()
             }
         }
@@ -101,7 +80,6 @@ struct SearchPageView: View {
             isCancelButtonVisible = false
         }
     }
-
     func debounceSearch() {
         debounceTimer?.invalidate()
         debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
@@ -192,4 +170,13 @@ struct SearchPageView: View {
         searchResults = []
         loadPastSearches()
     }
+    
+    func handleCitySelection(_ city: String) {
+        searchText = city
+        searchResults = []
+        viewModel.fetchCityDetails(for: city)
+        addCityToStore(cityName: city)
+        isPresented = false
+    }
 }
+

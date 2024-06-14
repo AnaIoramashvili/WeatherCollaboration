@@ -83,5 +83,8 @@ class WeatherViewModel: ObservableObject {
             }
         }
     }
+    func getWeatherCondition() -> String {
+        return weatherInfo?.daily.first?.weather.first?.description ?? "Clear"
+    }
 }
 

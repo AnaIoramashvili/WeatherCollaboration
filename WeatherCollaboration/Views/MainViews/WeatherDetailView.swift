@@ -45,6 +45,3 @@ struct WeatherDetailView: View {
         .padding()
     }
 }
-
-
-
