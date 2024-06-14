@@ -7,12 +7,13 @@
 
 import SwiftUI
 
-struct PrimaryButtonStyle: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct PrimaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundColor(.white)
+            .padding()
+            .background(Color.blue)
+            .cornerRadius(10)
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
     }
-}
-
-#Preview {
-    PrimaryButtonStyle()
 }
