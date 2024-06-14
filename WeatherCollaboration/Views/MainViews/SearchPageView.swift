@@ -193,7 +193,3 @@ struct SearchPageView: View {
         loadPastSearches()
     }
 }
-
-#Preview {
-    SearchPageView()
-}

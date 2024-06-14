@@ -48,6 +48,3 @@ struct WeatherDetailView: View {
 
 
 
-#Preview {
-    WeatherDetailView()
-}

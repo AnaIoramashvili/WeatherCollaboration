@@ -37,6 +37,3 @@ struct AddLocationView: View {
 }
 
 
-#Preview {
-    AddLocationView()
-}
